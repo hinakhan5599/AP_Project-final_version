@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- mapping -->
+    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+                <prop key="files.htm">filesForm</prop>
+                <prop key="upload.htm">filesController</prop>
+                <prop key="download.htm">filesController</prop>
+                <prop key="delete.htm">filesController</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- The view resolver -->
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          p:prefix="/WEB-INF/jsp/"
+          p:suffix=".jsp" />
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="5242880" />
+    </bean>
+
+    <!-- controller -->
+    <bean id="filesForm" class="com.spring.example.web.FilesForm">
+        <property name="filesService" ref="filesService"/>
+    </bean>
+
+    <bean id="filesController" class="com.spring.example.web.FilesController">
+        <property name="filesService" ref="filesService"/>
+        <property name="methodNameResolver">
+            <bean class="org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver">
+                <property name="mappings">
+                    <props>
+                        <prop key="/upload.htm">upload</prop>
+                        <prop key="/download.htm">download</prop>
+                        <prop key="/delete.htm">delete</prop>
+                    </props>
+                </property>
+            </bean>
+        </property>
+    </bean>
+</beans>
